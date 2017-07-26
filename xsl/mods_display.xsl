@@ -959,7 +959,7 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<td>
 				<xsl:value-of select="@displayLabel"/>
 			</td>
-                                 <xsl:if test="contains(., 'http://digital')">
+                                 <xsl:if test="contains(., 'http://')">
                                  <tr><td><xsl:text>Link to original item</xsl:text>
                                  <td>
                                    <xsl:element name="a">
