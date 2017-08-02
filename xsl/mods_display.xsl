@@ -959,7 +959,6 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<td>
 				<xsl:value-of select="@displayLabel"/>
 			</td>
-		</tr>
 	</xsl:template>
 <!-- wherever an http:// occurs make a real link-->
       <xsl:template match="mods:abstract">
