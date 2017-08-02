@@ -953,27 +953,34 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			</td>
 		</tr>
 	</xsl:template>
-<!-- <start will's own loop>-->
+<!-- Link to Original Item link, part of displaylabel mods:identifier-->
 	<xsl:template match="mods:identifier[not(@displayLabel='Object File Name')]">
 		<tr>
 			<td>
 				<xsl:value-of select="@displayLabel"/>
 			</td>
-                                 <xsl:if test="contains(., 'http://digital')">
-                                 <tr><td><xsl:text>Link to original item</xsl:text>
-                                 <td>
-                                   <xsl:element name="a">
-                                                <xsl:attribute name="href">
-                                                        <xsl:value-of select="."/>
-                                                </xsl:attribute>
-                                                <xsl:value-of select="."/>
-                                        </xsl:element>
-                                 </td>
-
-                                 </td></tr>
-                                 </xsl:if>
 		</tr>
 	</xsl:template>
+<!-- wherever an http:// occurs make a real link-->
+      <xsl:template match="mods:abstract">
+        <xsl:if test="contains(., 'http://')">
+          <tr><td><xsl:text>Link to original</xsl:text>
+                <td>
+                  <xsl:element name="a">
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="substring-before(substring-after(.,'record:'), ')')"/>
+                    </xsl:attribute>
+                      <xsl:value-of select="substring-before(substring-after(.,'record:'), ')')"/>
+                   </xsl:element>
+                 </td>
+                 </td></tr>
+                 <tr><td><xsl:text>Abstract</xsl:text>
+                   <td>
+                     <xsl:value-of select="."/>
+                   </td>
+                 </td></tr>
+        </xsl:if>
+      </xsl:template>
 	<xsl:template match="mods:relatedItem[mods:titleInfo]">
 		<xsl:for-each select="mods:titleInfo">
 			<tr>
