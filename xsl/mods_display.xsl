@@ -959,24 +959,27 @@ Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
 			<td>
 				<xsl:value-of select="@displayLabel"/>
 			</td>
+                        <td><xsl:value-of select="."/></td>
+                </tr>
 	</xsl:template>
-<!-- wherever an http:// occurs make a real link-->
+
+<!-- wherever an http:// occurs make a real link -->
       <xsl:template match="mods:abstract">
         <xsl:if test="contains(., 'http://')">
-          <tr><td><xsl:text>Link to original</xsl:text>
-                <td>
-                  <xsl:element name="a">
+              <xsl:variable name="before" select="substring-before(.,'http://')" />
+              <xsl:variable name="after" select="substring-after(., ')')" />   
+              <tr><td><xsl:text>Abstract</xsl:text>
+                <td> 
+                  <xsl:value-of select="$before"/>
+                   <xsl:element name="a">
                     <xsl:attribute name="href">
                       <xsl:value-of select="substring-before(substring-after(.,'record:'), ')')"/>
                     </xsl:attribute>
                       <xsl:value-of select="substring-before(substring-after(.,'record:'), ')')"/>
                    </xsl:element>
+                   <xsl:text>)</xsl:text>
+                   <xsl:value-of select="$after"/>
                  </td>
-                 </td></tr>
-                 <tr><td><xsl:text>Abstract</xsl:text>
-                   <td>
-                     <xsl:value-of select="."/>
-                   </td>
                  </td></tr>
         </xsl:if>
       </xsl:template>
