@@ -612,7 +612,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:if test="mods:place">
 		<tr>
 			<td>
-				<xsl:text>Place of Publication</xsl:text>
+				<xsl:text>Place of Origin</xsl:text>
 			</td>
 			<td>
 				<xsl:value-of select="mods:place/mods:placeTerm"/>
@@ -775,37 +775,99 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>
 
 	<xsl:template match="mods:physicalDescription">
+		
+		<xsl:if test="mods:internetMediaType">
+			<xsl:if test="normalize-space(mods:internetMediaType)">
+				<tr>
+					<td>
+						<xsl:value-of select="$mediaType"/>
+					</td>
+					<td>
+						<xsl:value-of select="mods:internetMediaType"/>
+					</td>
+				</tr>
+			</xsl:if>
+		</xsl:if>
+		
 		<xsl:if test="mods:extent">
-		  <xsl:if test="normalize-space(mods:extent)">
-			<tr><td><xsl:text>Size</xsl:text></td><td>
-				<xsl:value-of select="mods:extent"/>
-			</td></tr>
-		  </xsl:if>
+			<xsl:if test="normalize-space(mods:extent)">
+				<tr>
+					<td>
+						<xsl:text>Size</xsl:text>
+					</td>
+					<xsl:for-each select="mods:extent">
+						<td>
+							<xsl:value-of select="."/>
+						</td>
+					</xsl:for-each>
+				</tr>
+			</xsl:if>
 		</xsl:if>
-		<xsl:if test="mods:form">
-		  <xsl:if test="normalize-space(mods:form)">
-		    <tr><td><xsl:value-of select="$form"/></td><td>
-			<xsl:value-of select="mods:form"/>
-                    </td></tr>
-		  </xsl:if>
-		</xsl:if>
-               <xsl:if test="mods:internetMediaType">
-		  <xsl:if test="normalize-space(mods:internetMediaType)">
-		  <tr><td><xsl:value-of select="$mediaType"/></td><td>
-		    <xsl:value-of select="mods:internetMediaType"/>
-               </td></tr>
-		  </xsl:if>
-	       </xsl:if>
-		<xsl:if test="mods:note[@type='medium']">
+		<xsl:if test="normalize-space(mods:form[not(@type)])">
+
 			<tr>
 				<td>
-					<xsl:text>Original Format</xsl:text>
+					<xsl:value-of select="$form"/>
 				</td>
 				<td>
-					<xsl:value-of select="mods:note[@type='medium']"/>
+					<xsl:value-of select="mods:form[not(@type)]"/>
 				</td>
-			</tr>	
+			</tr>
+
 		</xsl:if>
+		<xsl:if test="normalize-space(mods:form[@type = 'material'])">
+
+			<tr>
+				<td>
+					<xsl:text>Materials</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:form[@type = 'material']"/>
+				</td>
+			</tr>
+
+		</xsl:if>
+		
+
+		<xsl:for-each select="mods:note">
+			<xsl:choose>
+				<xsl:when test="@displayLabel">
+					<tr>
+						<td>
+							<xsl:value-of select="@displayLabel"/>
+						</td>
+						<td>
+							<xsl:value-of select="."/>
+						</td>
+					</tr>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="@type">
+						<tr>
+							<td>
+								<xsl:value-of select="concat(translate(substring(@type, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@type, 2))"/>
+							</td>
+							<td>
+								<xsl:value-of select="."/>
+							</td>
+						</tr>
+						</xsl:when>
+					<xsl:otherwise>
+						<tr>
+							<td>
+								<xsl:text>Physical Description Note</xsl:text>
+							</td>
+							<td>
+								<xsl:value-of select="."/>
+							</td>
+						</tr>
+					</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="mods:mimeType">
