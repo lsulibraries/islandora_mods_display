@@ -789,20 +789,21 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</xsl:if>
 		</xsl:if>
 		
-		<xsl:if test="mods:extent">
-			<xsl:if test="normalize-space(mods:extent)">
-				<tr>
-					<td>
-						<xsl:text>Size</xsl:text>
-					</td>
-					<xsl:for-each select="mods:extent">
+		
+			<xsl:for-each select="mods:extent">
+				<xsl:if test="normalize-space(.)">
+					<tr>
+						<td>
+							<xsl:text>Size</xsl:text>
+						</td>
 						<td>
 							<xsl:value-of select="."/>
 						</td>
-					</xsl:for-each>
-				</tr>
-			</xsl:if>
-		</xsl:if>
+
+					</tr>
+				</xsl:if>
+			</xsl:for-each>
+		
 		<xsl:if test="normalize-space(mods:form[not(@type)])">
 
 			<tr>
