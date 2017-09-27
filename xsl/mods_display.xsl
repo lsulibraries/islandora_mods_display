@@ -8,79 +8,53 @@
    
 
 
-<!-- 
-This stylesheet transforms MODS version 3.2 records and collections of records to simple Dublin Core (DC) records, 
-based on the Library of Congress' MODS to simple DC mapping <http://www.loc.gov/standards/mods/mods-dcsimple.html> 
-		
-The stylesheet will transform a collection of MODS 3.2 records into simple Dublin Core (DC)
-as expressed by the SRU DC schema <http://www.loc.gov/standards/sru/dc-schema.xsd>
-
-The stylesheet will transform a single MODS 3.2 record into simple Dublin Core (DC)
-as expressed by the OAI DC schema <http://www.openarchives.org/OAI/2.0/oai_dc.xsd>
-		
-Because MODS is more granular than DC, transforming a given MODS element or subelement to a DC element frequently results in less precise tagging, 
-and local customizations of the stylesheet may be necessary to achieve desired results. 
-
-This stylesheet makes the following decisions in its interpretation of the MODS to simple DC mapping: 
-	
-When the roleTerm value associated with a name is creator, then name maps to dc:creator
-When there is no roleTerm value associated with name, or the roleTerm value associated with name is a value other than creator, then name maps to dc:contributor
-Start and end dates are presented as span dates in dc:date and in dc:coverage
-When the first subelement in a subject wrapper is topic, subject subelements are strung together in dc:subject with hyphens separating them
-Some subject subelements, i.e., geographic, temporal, hierarchicalGeographic, and cartographics, are also parsed into dc:coverage
-The subject subelement geographicCode is dropped in the transform
-
-
-Revision 1.1	2007-05-18 <tmee@loc.gov>
-		Added modsCollection conversion to DC SRU
-		Updated introductory documentation
-	
-Version 1.0	2007-05-04 Tracy Meehleib <tmee@loc.gov>
-
+	<!-- 
+This stylesheet transforms MODS into HTML for public facing display of MODS metadata in Islandora.
+Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04 Tracy Meehleib <tmee@loc.gov>)
 -->
 
 	<xsl:output method="xml" indent="yes"/>
 	<xsl:strip-space elements="*"/>
 	<xsl:key name="namesByDisplayLabel" match="mods:name" use="@displayLabel"/>
+	<xsl:variable name="title" select="'Title'"/>
+	<xsl:variable name="name" select="'Name'"/>
+	<xsl:variable name="classification" select="'Classification'"/>
+	<xsl:variable name="subjectTopic" select="'Subject Topic'"/>
+	<xsl:variable name="subjectOccupation" select="'Subject Occupation'"/>
+	<xsl:variable name="subjectName" select="'Subject Name'"/>
+	<xsl:variable name="subjectGeographic" select="'Subject Geographic'"/>
+	<xsl:variable name="subjectHierGeographic" select="'Subject Hierarchical Geographic'"/>
+	<xsl:variable name="subjectCartographic" select="'Subject Cartographic'"/>
+	<xsl:variable name="subjectTemporal" select="'Subject Temporal'"/>
+	<xsl:variable name="subjectLocalname" select="'Subject Local Name'"/>
+	<xsl:variable name="abstract" select="'Abstract'"/>
+	<xsl:variable name="toc" select="'Table of Contents'"/>
+	<xsl:variable name="note" select="'Note'"/>
+	<xsl:variable name="dateIssued" select="'Date Issued'"/>
+	<xsl:variable name="dateCreated" select="'Date Created'"/>
+	<xsl:variable name="dateCaptured" select="'Date Captured'"/>
+	<xsl:variable name="dateOther" select="'Date Other'"/>
+	<xsl:variable name="publisher" select="'Publisher'"/>
+	<xsl:variable name="genre" select="'Genre'"/>
+	<xsl:variable name="typeOfResource" select="'Type of Resource'"/>
+	<xsl:variable name="extent" select="'Extent'"/>
+	<xsl:variable name="form" select="'Form'"/>
+	<xsl:variable name="mediaType" select="'Media Type'"/>
+	<xsl:variable name="mimeType" select="'Mime Type'"/>
+	<xsl:variable name="identifier" select="'Identifier'"/>
+	<xsl:variable name="physicalLocation" select="'Physical Location'"/>
+	<xsl:variable name="shelfLocation" select="'Shelf Location'"/>
+	<xsl:variable name="url" select="'URL'"/>
+	<xsl:variable name="recommendedCitation" select="'Recommended Citation'"/>
+	<xsl:variable name="holdingSubLocation" select="'Holding Sublocation'"/>
+	<xsl:variable name="holdingShelfLocator" select="'Holding Shelf Locator'"/>
+	<xsl:variable name="electronicLocator" select="'Electronic Locator'"/>
+	<xsl:variable name="language" select="'Language'"/>
+	<xsl:variable name="relatedItem" select="'Related Item'"/>
+	<xsl:variable name="accessCondition" select="'Access Condition'"/>
+	
 	<xsl:template match="/">
-	  <xsl:param name="title" />
-	  <xsl:param name="name" />
-	  <xsl:param name="classification" />
-	  <xsl:param name="subjectTopic" />
-	  <xsl:param name="subjectOccupation" />
-	  <xsl:param name="subjectName" />
-	  <xsl:param name="subjectGeographic" />
-	  <xsl:param name="subjectHierGeographic" />
-	  <xsl:param name="subjectCartographic" />
-	  <xsl:param name="subjectTemporal" />
-	  <xsl:param name="subjectLocalname" />
-	  <xsl:param name="abstract" />
-	  <xsl:param name="toc" />
-	  <xsl:param name="note" />
-	  <xsl:param name="dateIssued" />
-	  <xsl:param name="dateCreated" />
-	  <xsl:param name="dateCaptured" />
-	  <xsl:param name="dateOther" />
-	  <xsl:param name="publisher" />
-	  <xsl:param name="genre" />
-	  <xsl:param name="typeOfResource" />
-	  <xsl:param name="extent" />
-	  <xsl:param name="form" />
-	  <xsl:param name="mediaType" />
-	  <xsl:param name="mimeType" />
-	  <xsl:param name="identifier" />
-	  <xsl:param name="physicalLocation" />
-	  <xsl:param name="shelfLocation" />
-	<!--  <xsl:param name="url" /> -->
-	  <xsl:param name="recommendedCitation" />
-	  <xsl:param name="holdingSubLocation" />
-	  <xsl:param name="holdingShelfLocator" />
-	  <xsl:param name="electronicLocator" />
-	  <xsl:param name="language" />
-	  <xsl:param name="relatedItem" />
-	  <xsl:param name="accessCondition" />
-
-		<xsl:choose>
+	  	<xsl:choose>
 		<xsl:when test="//mods:modsCollection">			
 			<srw_dc:dcCollection xsi:schemaLocation="info:srw/schema/1/dc-schema http://www.loc.gov/standards/sru/dc-schema.xsd">
 				<xsl:apply-templates/>
