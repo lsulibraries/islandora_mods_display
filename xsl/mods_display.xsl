@@ -1105,7 +1105,12 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					<xsl:text>Part of</xsl:text>
 				</td>
 				<td>
-					<xsl:value-of select="mods:detail/mods:title"/>
+					<xsl:if test="mods:detail/mods:title">
+						<xsl:value-of select="mods:detail/mods:title"/>
+					</xsl:if>
+					<xsl:if test="mods:detail/mods:number">
+						<xsl:value-of select="mods:detail/mods:number"/>
+					</xsl:if>
 				</td>
 			</tr>
 		</xsl:for-each>
@@ -1128,6 +1133,23 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:text>Host Identifier</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:for-each>
+		<xsl:for-each select="mods:abstract">
+			<tr>
+				<td>
+					<xsl:choose>
+						<xsl:when test="@displayLabel">
+							<xsl:value-of select="@displayLabel"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Host Abstract</xsl:text>
 						</xsl:otherwise>
 					</xsl:choose>
 				</td>
