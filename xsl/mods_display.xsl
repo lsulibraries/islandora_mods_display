@@ -804,29 +804,30 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</xsl:if>
 			</xsl:for-each>
 		
-		<xsl:if test="normalize-space(mods:form[not(@type)])">
-
-			<tr>
-				<td>
-					<xsl:value-of select="$form"/>
-				</td>
-				<td>
-					<xsl:value-of select="mods:form[not(@type)]"/>
-				</td>
-			</tr>
-
+		<xsl:if test="mods:form[not(@type)]">
+			<xsl:if test="normalize-space(mods:form[not(@type)])">
+				<tr>
+					<td>
+						<xsl:value-of select="$form"/>
+					</td>
+					<td>
+						<xsl:value-of select="mods:form[not(@type)]"/>
+					</td>
+				</tr>
+			</xsl:if>
 		</xsl:if>
-		<xsl:if test="normalize-space(mods:form[@type = 'material'])">
 
-			<tr>
-				<td>
-					<xsl:text>Materials</xsl:text>
-				</td>
-				<td>
-					<xsl:value-of select="mods:form[@type = 'material']"/>
-				</td>
-			</tr>
-
+		<xsl:if test="mods:form[@type = 'material']">
+			<xsl:if test="normalize-space(mods:form[@type = 'material'])">
+				<tr>
+					<td>
+						<xsl:text>Materials</xsl:text>
+					</td>
+					<td>
+						<xsl:value-of select="mods:form[@type = 'material']"/>
+					</td>
+				</tr>
+			</xsl:if>
 		</xsl:if>
 		
 
