@@ -1119,6 +1119,23 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</td>
 			</tr>
 		</xsl:for-each>
+		<xsl:for-each select="mods:identifier">
+			<tr>
+				<td>
+					<xsl:choose>
+						<xsl:when test="@displayLabel">
+							<xsl:value-of select="@displayLabel"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Host Identifier</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:for-each>
 	</xsl:template>
 <!--	<xsl:template match="mods:relatedItem[mods:part]">
 		<xsl:for-each select="mods:part">
