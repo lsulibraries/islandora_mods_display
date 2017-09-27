@@ -54,7 +54,44 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:variable name="accessCondition" select="'Access Condition'"/>
 	
 	<xsl:template match="/">
-	  	<xsl:choose>
+	 <!-- <xsl:param name="title" />
+	  <xsl:param name="name" />
+	  <xsl:param name="classification" />
+	  <xsl:param name="subjectTopic" />
+	  <xsl:param name="subjectOccupation" />
+	  <xsl:param name="subjectName" />
+	  <xsl:param name="subjectGeographic" />
+	  <xsl:param name="subjectHierGeographic" />
+	  <xsl:param name="subjectCartographic" />
+	  <xsl:param name="subjectTemporal" />
+	  <xsl:param name="subjectLocalname" />
+	  <xsl:param name="abstract" />
+	  <xsl:param name="toc" />
+	  <xsl:param name="note" />
+	  <xsl:param name="dateIssued" />
+	  <xsl:param name="dateCreated" />
+	  <xsl:param name="dateCaptured" />
+	  <xsl:param name="dateOther" />
+	  <xsl:param name="publisher" />
+	  <xsl:param name="genre" />
+	  <xsl:param name="typeOfResource" />
+	  <xsl:param name="extent" />
+	  <xsl:param name="form" />
+	  <xsl:param name="mediaType" />
+	  <xsl:param name="mimeType" />
+	  <xsl:param name="identifier" />
+	  <xsl:param name="physicalLocation" />
+	  <xsl:param name="shelfLocation" />
+	  <xsl:param name="url" />
+	  <xsl:param name="recommendedCitation" />
+	  <xsl:param name="holdingSubLocation" />
+	  <xsl:param name="holdingShelfLocator" />
+	  <xsl:param name="electronicLocator" />
+	  <xsl:param name="language" />
+	  <xsl:param name="relatedItem" />
+	  <xsl:param name="accessCondition" />-->
+
+		<xsl:choose>
 		<xsl:when test="//mods:modsCollection">			
 			<srw_dc:dcCollection xsi:schemaLocation="info:srw/schema/1/dc-schema http://www.loc.gov/standards/sru/dc-schema.xsd">
 				<xsl:apply-templates/>
@@ -949,7 +986,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</td>
 			</tr>
 		</xsl:for-each>
-		<xsl:for-each select="mods:location/mods:url[@displayLabel]">
+		<xsl:for-each select="mods:location/mods:url[not(@displayLabel='Relation')]">
 			<tr>
 				<td>
 					<xsl:value-of select="@displayLabel"/>
