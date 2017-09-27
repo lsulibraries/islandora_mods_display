@@ -965,7 +965,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:template>
 <!-- <start will's own loop>-->
-	<xsl:template match="mods:identifier[not(@displayLabel='Object File Name')]">
+	<xsl:template match="mods:identifier[not(@displayLabel='Migrated From')]">
 		<tr>
 			<td>
 				<xsl:value-of select="@displayLabel"/>
