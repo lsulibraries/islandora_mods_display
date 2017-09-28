@@ -274,6 +274,26 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</xsl:for-each>
 			</td>
 		</tr>
+			<xsl:if test="mods:description|mods:affiliation">
+				<!-- KNOWN ISSUE: This is only getting descripiton & affiliation for
+					the first occurrence of a name of a given display label -->
+				<tr>
+					<td>
+						<xsl:text>Biographical Information</xsl:text>
+					</td>
+					<td>
+						<xsl:for-each select="mods:affiliation">
+							<xsl:value-of select="."/>
+							<br />
+						</xsl:for-each>
+						<xsl:for-each select="mods:description">
+							<xsl:value-of select="."/>
+							<br />
+						</xsl:for-each>
+					</td>
+				</tr>
+				<br />
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 	
