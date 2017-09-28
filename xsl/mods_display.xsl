@@ -179,6 +179,39 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
  	<!-- </dc:title> -->
 	</xsl:template>
 
+	<xsl:template match="mods:part">
+		<xsl:for-each select="mods:detail">
+		<tr>
+			<td>
+				<xsl:choose>
+					<xsl:when test="@type">
+						<xsl:value-of select="concat(translate(substring(@type, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@type, 2))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>Section Detail</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</td>
+			<td>
+				<xsl:if test="mods:title[normalize-space()]">
+					<xsl:if test="mods:caption">
+						<xsl:value-of select="mods:caption"/>
+						<xsl:text> </xsl:text>
+					</xsl:if>
+					<xsl:value-of select="mods:title"/>
+				</xsl:if>
+				<xsl:if test="mods:number[normalize-space()]">
+					<xsl:if test="mods:caption">
+						<xsl:value-of select="mods:caption"/>
+						<xsl:text> </xsl:text>
+					</xsl:if>
+					<xsl:value-of select="mods:number"/>
+				</xsl:if>
+			</td>
+		</tr>
+		</xsl:for-each>
+	</xsl:template>
+
 	<xsl:template match="mods:name[1]">
 		<xsl:for-each select="//mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
 		<xsl:variable name="nameType" select="@type"/>
