@@ -1354,6 +1354,19 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			<td><xsl:value-of select="."/></td>
 		</tr>
 	</xsl:template>
+	
+	<xsl:template match="mods:extension">
+		<xsl:if test="normalize-space(mods:hardwareSoftware)">
+			<tr>
+				<td>
+					<xsl:text>Digital Reproduction Information</xsl:text>
+				</td>
+				<td>
+					<xsl:value-of select="mods:hardwareSoftware"/>
+				</td>
+			</tr>
+		</xsl:if>
+	</xsl:template>
 
 	<xsl:template name="name">
 	  	<xsl:value-of select="mods:namePart"/>
