@@ -212,8 +212,8 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="mods:name[1]">
-		<xsl:for-each select="//mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
+	<xsl:template match="mods:name[1][not(parent::subject)]">
+		<xsl:for-each select="/mods:mods/mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
 		<xsl:variable name="nameType" select="@type"/>
 		<tr>
 			<td>
@@ -305,6 +305,9 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</td></tr>
 	</xsl:template>
 
+		<!--KNOWN ISSUE with all subjects: This approach only displays properly when
+		all subelements under subject are identical, not with a mixed subject--> 
+
 	<xsl:template match="mods:subject[mods:topic][1]">
 		<tr>
 			<td>
@@ -370,29 +373,44 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</xsl:if>
 			</td>
 			<td>
-				<xsl:for-each select="mods:geographic">
+
+				<a>
+					<xsl:attribute name="href">
+						<xsl:for-each select="mods:geographic">
+							<xsl:if test="position() = 1">
+								<xsl:value-of
+									select="'/islandora/search/mods_subject_geographic_ms%3A'"/>
+							</xsl:if>
+							<xsl:text>%2522</xsl:text>
+							<xsl:value-of select="."/>
+							<xsl:text>%2522</xsl:text>
+						</xsl:for-each>
+					</xsl:attribute>
+					<xsl:for-each select="mods:geographic">
+						<xsl:value-of select="."/>
+						<xsl:if test="position()!=last()">--</xsl:if>
+					</xsl:for-each>
+				</a>
+				<br/>
+				<xsl:for-each select="following-sibling::mods:subject[mods:geographic]">
 					<a>
 						<xsl:attribute name="href">
-							<xsl:value-of select="'/islandora/search/mods_subject_geographic_ms%3A%2522'"/>
-							<xsl:value-of select="."/>
-							<xsl:value-of select="'%2522'"/>
-						</xsl:attribute>
-						<xsl:value-of select="."/>
-					</a>
-					<br />
-				</xsl:for-each>
-				<xsl:for-each select="following-sibling::mods:subject[mods:geographic]">
-					<xsl:for-each select="mods:geographic">
-						<a>
-							<xsl:attribute name="href">
-								<xsl:value-of select="'/islandora/search/mods_subject_geographic_ms%3A%2522'"/>
+							<xsl:for-each select="mods:geographic">
+								<xsl:if test="position() = 1">
+									<xsl:value-of
+										select="'/islandora/search/mods_subject_geographic_ms%3A'"/>
+								</xsl:if>
+								<xsl:text>%2522</xsl:text>
 								<xsl:value-of select="."/>
-								<xsl:value-of select="'%2522'"/>
-							</xsl:attribute>
+								<xsl:text>%2522</xsl:text>
+							</xsl:for-each>
+						</xsl:attribute>
+						<xsl:for-each select="mods:geographic">
 							<xsl:value-of select="."/>
-						</a>
-					</xsl:for-each>
-					<br />
+							<xsl:if test="position() != last()">--</xsl:if>
+						</xsl:for-each>
+					</a>
+					<br/>
 				</xsl:for-each>
 			</td>
 		</tr>
@@ -410,17 +428,47 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</xsl:if>
 			</td>
 			<td>
-				<xsl:for-each select="mods:temporal">
-					<a>
-						<xsl:attribute name="href">
-							<xsl:value-of select="'/islandora/search/mods_subject_temporal_ms%3A%2522'"/>
-							<xsl:value-of select="."/>
-							<xsl:value-of select="'%2522'"/>
+				<a>
+					<xsl:attribute name="href">
+							<xsl:for-each select="mods:temporal">
+								<xsl:if test="position() = 1">
+									<xsl:value-of
+										select="'/islandora/search/mods_subject_temporal_ms%3A'"/>
+								</xsl:if>
+								<xsl:text>%2522</xsl:text>
+								<xsl:value-of select="."/>
+								<xsl:text>%2522</xsl:text>
+							</xsl:for-each>
 						</xsl:attribute>
-						<xsl:value-of select="."/>
+						<xsl:for-each select="mods:temporal">
+							<xsl:value-of select="."/>
+							<xsl:if test="position()!=last()">--</xsl:if>
+						</xsl:for-each>
 					</a>
-					<br />
-				</xsl:for-each>
+					<br/>
+					<xsl:for-each select="following-sibling::mods:subject[mods:temporal]">
+						<a>
+							<xsl:attribute name="href">
+								<xsl:for-each select="mods:temporal">
+									<xsl:if test="position() = 1">
+										<xsl:value-of
+											select="'/islandora/search/mods_subject_temporal_ms%3A'"/>
+									</xsl:if>
+									<xsl:text>%2522</xsl:text>
+									<xsl:value-of select="."/>
+									<xsl:text>%2522</xsl:text>
+								</xsl:for-each>
+							</xsl:attribute>
+							<xsl:for-each select="mods:temporal">
+								<xsl:value-of select="."/>
+								<xsl:if test="position() != last()">--</xsl:if>
+							</xsl:for-each>
+						</a>
+						<br/>
+					</xsl:for-each>
+				</td>
+			<td>
+
 				<xsl:for-each select="following-sibling::mods:subject[mods:temporal]">
 					<xsl:for-each select="mods:temporal">
 						<a>
@@ -437,25 +485,204 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</td>
 		</tr>
 	</xsl:template>
-	<xsl:template match="mods:subject[mods:occupation | mods:hierarchicalGeographic | mods:cartographics ] ">
+	
+	<xsl:template match="mods:subject[mods:occupation][1]">
+		<tr>
+			<td>
+				<xsl:if test="normalize-space(mods:occupation)">
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:value-of select="$subjectOccupation"/>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</xsl:if>
+			</td>
+			<td>
+				<a>
+					<xsl:attribute name="href">
+						<xsl:for-each select="mods:occupation">
+							<xsl:if test="position() = 1">
+								<xsl:value-of
+									select="'/islandora/search/mods_subject_occupation_ms%3A'"/>
+							</xsl:if>
+							<xsl:text>%2522</xsl:text>
+							<xsl:value-of select="."/>
+							<xsl:text>%2522</xsl:text>
+						</xsl:for-each>
+					</xsl:attribute>
+					<xsl:for-each select="mods:occupation">
+						<xsl:value-of select="."/>
+						<xsl:if test="position()!=last()">--</xsl:if>
+					</xsl:for-each>
+				</a>
+				<br/>
+				<xsl:for-each select="following-sibling::mods:subject[mods:occupation]">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:for-each select="mods:occupation">
+								<xsl:if test="position() = 1">
+									<xsl:value-of
+										select="'/islandora/search/mods_subject_occupation_ms%3A'"/>
+								</xsl:if>
+								<xsl:text>%2522</xsl:text>
+								<xsl:value-of select="."/>
+								<xsl:text>%2522</xsl:text>
+							</xsl:for-each>
+						</xsl:attribute>
+						<xsl:for-each select="mods:occupation">
+							<xsl:value-of select="."/>
+							<xsl:if test="position() != last()">--</xsl:if>
+						</xsl:for-each>
+					</a>
+					<br/>
+				</xsl:for-each>
+			</td>
+		</tr>
+	
+	</xsl:template>
+	
+	<xsl:template match="mods:subject[mods:name][1]">
+		<!--<xsl:if test="normalize-space(mods:name)">
+		<xsl:for-each select="mods:name">
+			<tr><td><xsl:value-of select="$subjectName"/></td><td>
+				<xsl:call-template name="name"/>
+			</td></tr>
+		</xsl:for-each>
+		</xsl:if>
+		-->
+
+		<tr>
+			<td>
+				<xsl:if test="normalize-space(mods:name/*)">
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:value-of select="$subjectName"/>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</xsl:if>
+			</td>
+
+			<td>
+				<xsl:for-each select="mods:name">
+					<xsl:for-each
+						select="/mods:mods/mods:subject/mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
+						<xsl:variable name="nameType" select="@type"/>
+						<a>
+							<xsl:attribute name="href">
+								<xsl:for-each select="mods:namePart">
+									<xsl:choose>
+										<xsl:when test="$nameType">
+											<xsl:if test="position() = 1">
+												<xsl:value-of
+												select="'/islandora/search/mods_subject_name_'"/>
+
+												<xsl:value-of select="$nameType"/>
+												<xsl:text>_namePart_mt%3A</xsl:text>
+											</xsl:if>
+											<xsl:text>%2522</xsl:text>
+											<xsl:value-of select="."/>
+											<xsl:text>%2522</xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:if test="position() = 1">
+												<xsl:value-of
+												select="'/islandora/search/mods_subject_name_namePart_mt%3A'"
+												/>
+											</xsl:if>
+											<xsl:text>%2522</xsl:text>
+											<xsl:value-of select="."/>
+											<xsl:text>%2522</xsl:text>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:for-each>
+							</xsl:attribute>
+							<xsl:for-each select="mods:namePart">
+								<xsl:value-of select="."/>
+								<xsl:if test="position() != last()">--</xsl:if>
+							</xsl:for-each>
+						</a>
+						<br/>
+					</xsl:for-each>
+					<xsl:for-each select="following-sibling::mods:subject[mods:name]">
+						<xsl:variable name="nameType" select="@type"/>
+						<a>
+							<xsl:attribute name="href">
+								<xsl:for-each select="mods:namePart">
+									<xsl:choose>
+										<xsl:when test="$nameType">
+											<xsl:if test="position() = 1">
+												<xsl:value-of
+													select="'/islandora/search/mods_subject_name_'"/>
+												
+												<xsl:value-of select="$nameType"/>
+												<xsl:text>_namePart_mt%3A</xsl:text>
+											</xsl:if>
+											<xsl:text>%2522</xsl:text>
+											<xsl:value-of select="."/>
+											<xsl:text>%2522</xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:if test="position() = 1">
+												<xsl:value-of
+													select="'/islandora/search/mods_subject_name_namePart_mt%3A'"
+												/>
+											</xsl:if>
+											<xsl:text>%2522</xsl:text>
+											<xsl:value-of select="."/>
+											<xsl:text>%2522</xsl:text>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:for-each>
+							</xsl:attribute>
+							<xsl:for-each select="mods:namePart">
+								<xsl:value-of select="."/>
+								<xsl:if test="position() != last()">--</xsl:if>
+							</xsl:for-each>
+						</a>
+						<br/>
+					</xsl:for-each>
+				</xsl:for-each>
+			</td>
+			<!--			<td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+						<!-\- 
+				<xsl:for-each select="key('namesByDisplayLabel', @displayLabel)">
+					
+					<a>
+						<xsl:attribute name="href">
+							<xsl:choose>
+								<xsl:when test="$nameType">
+									<xsl:value-of select="'/islandora/search/mods_name_'"/>
+									<xsl:value-of select="$nameType"/>
+									<xsl:text>_namePart_mt%3A%2522</xsl:text>
+									<xsl:value-of select="mods:namePart"/>
+									<xsl:text>%2522</xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="'/islandora/search/mods_name_namePart_mt%3A%2522'"/>
+									<xsl:value-of select="mods:namePart"/>
+									<xsl:value-of select="'%2522'"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
+						<xsl:value-of select="mods:namePart"/>
+					</a>
+					<br />
+				</xsl:for-each>-\->
+					</xsl:when>
+				</xsl:choose>
+			</td>-->
+		</tr>
+	</xsl:template>
+	
+	
+	
+	<xsl:template match="mods:subject[mods:hierarchicalGeographic | mods:cartographics ] ">
 <!-- 	<xsl:template match="mods:subject[mods:topic | mods:name | mods:occupation | mods:geographic | mods:hierarchicalGeographic | mods:cartographics | mods:temporal] "> -->
 	
-	  <xsl:if test="normalize-space(mods:occupation)">
-	    <xsl:for-each select="mods:occupation">
-	      <tr><td><xsl:value-of select="$subjectOccupation"/></td><td>
-		  <xsl:value-of select="."/>
-		  <xsl:if test="position()!=last()">--</xsl:if>
-	      </td></tr>
-	    </xsl:for-each>		
-	  </xsl:if>
-
-	  <xsl:if test="normalize-space(mods:name)">
-	    <xsl:for-each select="mods:name">
-	      <tr><td><xsl:value-of select="$subjectName"/></td><td>
-		  <xsl:call-template name="name"/>
-	      </td></tr>
-	    </xsl:for-each>
-	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:hierarchicalGeographic)">
 	  <xsl:for-each select="mods:hierarchicalGeographic">
 		  <tr><td>
