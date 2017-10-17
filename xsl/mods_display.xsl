@@ -732,11 +732,58 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:template match="mods:abstract">
 	  <!-- <xsl:if test="mods:abstract =''"> -->
 	  <xsl:if test="normalize-space()">
-		  <tr><td><xsl:choose><xsl:when test="not(@displayLabel)">
-                                <xsl:value-of select="$abstract"/>
-                        </xsl:when></xsl:choose><xsl:value-of select="@displayLabel"/> </td><td>			
-			<xsl:value-of select="."/>
-		  </td></tr>
+		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
+		<xsl:variable name="abstractUrl" select="substring-before(substring-after(., 'http'), substring(translate(substring-after(., 'http'), $urlchar, ''),1,1))"/>
+		<xsl:if test="normalize-space(.)">
+			<tr><td>
+				<xsl:choose>
+					<xsl:when test="not(@displayLabel)">
+						<xsl:value-of select="$abstract"/>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:value-of select="@displayLabel"/>
+			</td>
+				<td>
+					<xsl:choose>	
+						<xsl:when test="contains(., 'http')">
+							<xsl:value-of select="substring-before(., 'http')"/>
+							<xsl:element name="a">
+								<xsl:attribute name="href">
+									<xsl:text>http</xsl:text>
+									<xsl:choose>
+										<xsl:when test="$abstractUrl = ''">
+											<xsl:value-of select="substring-after(., 'http')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$abstractUrl"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+								<xsl:text>http</xsl:text>				
+								<xsl:choose>
+									<xsl:when test="$abstractUrl = ''">
+										<xsl:value-of select="substring-after(., 'http')"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$abstractUrl"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:element>
+							<xsl:choose>
+								<xsl:when test="$abstractUrl = ''">
+									<!--do nothing-->
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="substring-after(., $abstractUrl)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="."/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td></tr>
+		</xsl:if>
 	  </xsl:if>
 	</xsl:template>
 
