@@ -802,10 +802,10 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:if test="normalize-space(.)">
 			<xsl:variable name="metaSetName">
 				<xsl:choose>
-					<xsl:when test="@type = ('ownership' or 'preferred citation' or 'citation/reference')">
+					<xsl:when test="@type='ownership' or @type='preferred citation' or @type='citation/reference'">
 						<xsl:value-of select="'metaSetAccess'"/>
 					</xsl:when>
-					<xsl:when test="@type = ('thesis' or 'statement of responsibility')">
+					<xsl:when test="@type='thesis' or @type='statement of responsibility'">
 						<xsl:value-of select="'metaSetCore'"/>
 					</xsl:when>
 					<xsl:when test="@type='acquisition'">
