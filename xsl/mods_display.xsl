@@ -1372,7 +1372,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:template>
 	<xsl:template match="mods:language[mods:languageTerm/@type='term']">
-		<tr class="metaSetContent">
+		<tr class="metaSetAccess">
 			<td>
 				<xsl:text>Language</xsl:text>
 			</td>
