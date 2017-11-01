@@ -124,7 +124,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	
 	<xsl:template match="mods:titleInfo[normalize-space(.)]">
 	<!-- <dc:title> -->
-			<tr><td>
+			<tr class="metaSetCore"><td>
 			<xsl:choose>
 			  <xsl:when test="not(@displayLabel)">
 			   <xsl:value-of select="$title"/>
@@ -181,7 +181,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 
 	<xsl:template match="mods:part">
 		<xsl:for-each select="mods:detail">
-		<tr>
+		<tr class="metaSetCore">
 			<td>
 				<xsl:choose>
 					<xsl:when test="@type">
@@ -215,7 +215,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:template match="mods:name[1][not(parent::subject)]">
 		<xsl:for-each select="/mods:mods/mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
 		<xsl:variable name="nameType" select="@type"/>
-		<tr>
+		<tr class="metaSetCore">
 			<td>
 				<xsl:choose>
 					<xsl:when test="not(@displayLabel)">
@@ -277,7 +277,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			<xsl:if test="mods:description|mods:affiliation">
 				<!-- KNOWN ISSUE: This is only getting descripiton & affiliation for
 					the first occurrence of a name of a given display label -->
-				<tr>
+				<tr class="metaSetContent">
 					<td>
 						<xsl:text>Biographical Information</xsl:text>
 					</td>
@@ -298,7 +298,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>
 	
 	<xsl:template match="mods:classification">
-		<tr><td>
+		<tr class="metaSetAccess"><td>
 		    <xsl:value-of select="$classification"/>
 		</td><td>
 			<xsl:value-of select="."/>
@@ -309,7 +309,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		all subelements under subject are identical, not with a mixed subject--> 
 
 	<xsl:template match="mods:subject[mods:topic][1]">
-		<tr>
+		<tr class="metaSetContent">
 			<td>
 				<xsl:if test="normalize-space(mods:topic)">
 					<xsl:choose>
@@ -361,7 +361,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:template>
 	<xsl:template match="mods:subject[mods:geographic][1]">
-		<tr>
+		<tr class="metaSetContent">
 			<td>
 				<xsl:if test="normalize-space(mods:geographic)">
 					<xsl:choose>
@@ -416,7 +416,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:template>
 	<xsl:template match="mods:subject[mods:temporal][1]">
-		<tr>
+		<tr class="metaSetContent">
 			<td>
 				<xsl:if test="normalize-space(mods:temporal)">
 					<xsl:choose>
@@ -487,7 +487,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>
 	
 	<xsl:template match="mods:subject[mods:occupation][1]">
-		<tr>
+		<tr class="metaSetContent">
 			<td>
 				<xsl:if test="normalize-space(mods:occupation)">
 					<xsl:choose>
@@ -552,7 +552,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</xsl:if>
 		-->
 
-		<tr>
+		<tr class="metaSetContent">
 			<td>
 				<xsl:if test="normalize-space(mods:name/*)">
 					<xsl:choose>
@@ -685,7 +685,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	
 	  <xsl:if test="normalize-space(mods:hierarchicalGeographic)">
 	  <xsl:for-each select="mods:hierarchicalGeographic">
-		  <tr><td>
+	  	<tr class="metaSetContent"><td>
 		  	<xsl:if test="normalize-space(mods:continent|mods:country|mods:provence|mods:region|mods:state|mods:territory|mods:county|mods:city|mods:island|mods:area|mods:citySection)">
 		  		<xsl:choose>
 		  			<xsl:when test="not(../@displayLabel)"> <!-- tests for parent's displayLabel -->
@@ -704,14 +704,14 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:cartographics)">
 	    <xsl:for-each select="mods:cartographics/*">
-	      <tr><td><xsl:value-of select="$subjectCartographic"/></td><td>
+	    	<tr class="metaSetContent"><td><xsl:value-of select="$subjectCartographic"/></td><td>
 		  <xsl:value-of select="."/>
 	      </td></tr>
 	    </xsl:for-each>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:temporal)">
 	    <xsl:if test="mods:temporal">
-	      <tr><td><xsl:value-of select="$subjectTemporal"/></td><td>
+	    	<tr class="metaSetContent"><td><xsl:value-of select="$subjectTemporal"/></td><td>
 		  <xsl:for-each select="mods:temporal">
 		    <xsl:value-of select="."/>
 		    <xsl:if test="position()!=last()">-</xsl:if>
@@ -720,7 +720,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	    </xsl:if>
 	  </xsl:if>
 		<xsl:if test="*[1][local-name()='topic'] and *[local-name()!='topic']">
-		  <tr><td><xsl:value-of select="$subjectLocalname"/></td><td>
+			<tr class="metaSetContent"><td><xsl:value-of select="$subjectLocalname"/></td><td>
 				<xsl:for-each select="*[local-name()!='cartographics' and local-name()!='geographicCode' and local-name()!='hierarchicalGeographic'] ">
 					<xsl:value-of select="."/>
 					<xsl:if test="position()!=last()">--</xsl:if>
@@ -735,7 +735,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
 		<xsl:variable name="abstractUrl" select="substring-before(substring-after(., 'http'), substring(translate(substring-after(., 'http'), $urlchar, ''),1,1))"/>
 		<xsl:if test="normalize-space(.)">
-			<tr><td>
+			<tr class="metaSetContent"><td>
 				<xsl:choose>
 					<xsl:when test="not(@displayLabel)">
 						<xsl:value-of select="$abstract"/>
@@ -790,7 +790,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:template match="mods:tableOfContents">
 	  <!-- <xsl:if test="mods:tableOfContents =''"> -->
 	  <xsl:if test="normalize-space(.)">
-		  <tr><td><xsl:value-of select="toc"/></td><td>			
+	  	<tr class="metaSetContent"><td><xsl:value-of select="toc"/></td><td>			
 			<xsl:value-of select="."/>
 		  </td></tr>
 	  </xsl:if>
@@ -800,7 +800,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
 		<xsl:variable name="noteUrl" select="substring-before(substring-after(., 'http'), substring(translate(substring-after(., 'http'), $urlchar, ''),1,1))"/>
 		<xsl:if test="normalize-space(.)">
-			<tr><td>
+			<tr class="metaSetContent"><td>
 				<xsl:choose>
 					<xsl:when test="not(@displayLabel)">
 						<xsl:value-of select="$note"/>
@@ -861,7 +861,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 -->
 <xsl:template match="mods:originInfo">
 	<xsl:if test="mods:edition">
-		<tr>
+		<tr class="metaSetCore">
 			<td>
 				<xsl:text>Edition</xsl:text>
 			</td>
@@ -871,7 +871,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:if>
 	<xsl:if test="mods:dateCreated">
-		<tr>
+		<tr class="metaSetCore">
 			<td><xsl:value-of select="$dateCreated"/></td>
 			<td><xsl:value-of select="mods:dateCreated"/>
 				<xsl:if test="mods:dateCreated/@qualifier">
@@ -892,7 +892,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:if>
 	<xsl:if test="mods:dateCaptured">
-		<tr>
+		<tr class="metaSetAdmin">
 			<td><xsl:text>Date Digitized</xsl:text></td>
 			<td><xsl:value-of select="mods:dateCaptured"/>
 				<xsl:if test="mods:dateCaptured/@qualifier">
@@ -913,7 +913,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:if>
 	<xsl:if test="mods:dateIssued">
-		<tr>
+		<tr class="metaSetCore">
 			<td><xsl:text>Date Published</xsl:text></td>
 			<td><xsl:value-of select="mods:dateIssued"/>
 				<xsl:if test="mods:dateIssued/@qualifier">
@@ -934,7 +934,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:if>
 	<xsl:if test="mods:publisher">
-		<tr>
+		<tr class="metaSetCore">
 			<td>
 				<xsl:text>Publisher</xsl:text>
 			</td>
@@ -944,7 +944,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:if>
 	<xsl:if test="mods:place">
-		<tr>
+		<tr class="metaSetCore">
 			<td>
 				<xsl:text>Place of Origin</xsl:text>
 			</td>
@@ -1039,9 +1039,10 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 
 	<xsl:template match="mods:genre">
 	  <xsl:if test="normalize-space()">
-	  <tr><td><xsl:value-of select="$genre"/></td><td>
-	      <xsl:value-of select="."/>
-	  </td></tr>
+	  	<tr class="metaSetContent">
+	  		<td><xsl:value-of select="$genre"/></td>
+	  		<td><xsl:value-of select="."/></td>
+	  	</tr>
 	  </xsl:if>
 	  <!--
 		<xsl:choose>
@@ -1065,9 +1066,10 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>
 
 	<xsl:template match="mods:typeOfResource">
-	  <tr><td><xsl:value-of select="$typeOfResource"/></td><td>
-	      <xsl:value-of select="."/>
-	  </td></tr>
+		<tr class="metaSetCarrier">
+			<td><xsl:value-of select="$typeOfResource"/></td>
+			<td><xsl:value-of select="."/></td>
+		</tr>
 <!--
 		<xsl:if test="@collection='yes'">
 			<dc:type>Collection</dc:type>
@@ -1112,7 +1114,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		
 		<xsl:if test="mods:internetMediaType">
 			<xsl:if test="normalize-space(mods:internetMediaType)">
-				<tr>
+				<tr class="metaSetCarrier">
 					<td>
 						<xsl:value-of select="$mediaType"/>
 					</td>
@@ -1126,7 +1128,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		
 			<xsl:for-each select="mods:extent">
 				<xsl:if test="normalize-space(.)">
-					<tr>
+					<tr class="metaSetCarrier">
 						<td>
 							<xsl:text>Size</xsl:text>
 						</td>
@@ -1140,7 +1142,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		
 		<xsl:if test="mods:form[not(@type)]">
 			<xsl:if test="normalize-space(mods:form[not(@type)])">
-				<tr>
+				<tr class="metaSetCarrier">
 					<td>
 						<xsl:value-of select="$form"/>
 					</td>
@@ -1153,7 +1155,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 
 		<xsl:if test="mods:form[@type = 'material']">
 			<xsl:if test="normalize-space(mods:form[@type = 'material'])">
-				<tr>
+				<tr class="metaSetCarrier">
 					<td>
 						<xsl:text>Materials</xsl:text>
 					</td>
@@ -1168,7 +1170,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:for-each select="mods:note">
 			<xsl:choose>
 				<xsl:when test="@displayLabel">
-					<tr>
+					<tr class="metaSetCarrier">
 						<td>
 							<xsl:value-of select="@displayLabel"/>
 						</td>
@@ -1180,17 +1182,19 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				<xsl:otherwise>
 					<xsl:choose>
 						<xsl:when test="@type">
-						<tr>
-							<td>
-								<xsl:value-of select="concat(translate(substring(@type, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@type, 2))"/>
-							</td>
-							<td>
-								<xsl:value-of select="."/>
-							</td>
-						</tr>
+							<tr class="metaSetCarrier">
+								<td>
+									<xsl:value-of
+										select="concat(translate(substring(@type, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@type, 2))"
+									/>
+								</td>
+								<td>
+									<xsl:value-of select="."/>
+								</td>
+							</tr>
 						</xsl:when>
 					<xsl:otherwise>
-						<tr>
+						<tr class="metaSetCarrier">
 							<td>
 								<xsl:text>Physical Description Note</xsl:text>
 							</td>
@@ -1208,9 +1212,10 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 
 	<xsl:template match="mods:mimeType">
 		  <xsl:if test="normalize-space(.)">
-		    <tr><td><xsl:value-of select="$mimeType"/></td><td>
-			<xsl:value-of select="."/>
-		    </td></tr>
+		  	<tr class="metaSetCarrier">
+		  		<td><xsl:value-of select="$mimeType"/></td>
+		  		<td><xsl:value-of select="."/></td>
+		  	</tr>
 		  </xsl:if>
 	</xsl:template>
 
@@ -1243,7 +1248,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 <!-- will's template for physloc -->
 	<xsl:template match="mods:location">
 		<xsl:for-each select="mods:physicalLocation[not(@displayLabel='OCLC Member Symbol')]">
-			<tr>
+			<tr class="metaSetAccess">
 				<td>
 				<xsl:choose>
 					<xsl:when test="not(@displayLabel)">
@@ -1259,7 +1264,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</xsl:for-each>
 
 	  <xsl:if test="normalize-space(mods:shelfLocator)">
-	  	<tr>
+	  	<tr class="metaSetAccess">
 	  		<td>
 	  			<xsl:text>Shelf Locator</xsl:text>
 	  		</td>
@@ -1278,7 +1283,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	    </td></tr>
 	  </xsl:if> -->
 	  <xsl:if test="normalize-space(mods:recommendedCitation)">
-	  	<tr>
+	  	<tr class="metaSetAccess">
 	  		<td>
 	  			<xsl:value-of select="$recommendedCitation"/>
 	  		</td>
@@ -1290,7 +1295,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	  	</tr>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:subLocation)">
-		<tr>
+	  	<tr class="metaSetAccess">
 			<td>
 				<xsl:text>Sublocation</xsl:text>
 			</td>
@@ -1302,7 +1307,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:shelfLocator)">
-		<tr>
+	  	<tr class="metaSetAccess">
 			<td>
 				<xsl:text>Shelf Locator</xsl:text>
 			</td>
@@ -1314,7 +1319,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:electronicLocator)">
-		<tr>
+	  	<tr class="metaSetAccess">
 			<td>
 				<xsl:value-of select="$electronicLocator"/>
 			</td>
@@ -1337,20 +1342,20 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>-->
 
 	<xsl:template match="mods:language[mods:languageTerm/@type='code']">
-			<tr>
-	  			<td>
-	  				<xsl:text>Language Code</xsl:text>
-	  			</td>
-	  			<td>
-	  				<xsl:for-each select="mods:languageTerm[@type='code']">
-		      			<xsl:value-of select="."/>
-		  				<xsl:if test="position()!=last()">, </xsl:if>
-	  				</xsl:for-each>
-				</td>
-	  		</tr>
+		<tr class="metaSetContent">
+			<td>
+				<xsl:text>Language Code</xsl:text>
+			</td>
+			<td>
+				<xsl:for-each select="mods:languageTerm[@type = 'code']">
+					<xsl:value-of select="."/>
+					<xsl:if test="position() != last()">, </xsl:if>
+				</xsl:for-each>
+			</td>
+		</tr>
 	</xsl:template>
 	<xsl:template match="mods:language[mods:languageTerm/@type='term']">
-		<tr>
+		<tr class="metaSetContent">
 			<td>
 				<xsl:text>Language</xsl:text>
 			</td>
@@ -1364,7 +1369,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>
 <!-- <start will's own loop>-->
 	<xsl:template match="mods:identifier[not(@displayLabel='Migrated From')]">
-		<tr>
+		<tr class="metaSetCore">
 			<td>
 				<xsl:value-of select="@displayLabel"/>
 			</td>
@@ -1373,6 +1378,9 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</td>
 		</tr>
 	</xsl:template>
+	
+	
+<!--	RETURN HERE FOR RELATED ITEM WORK 	-->
 	<xsl:template match="mods:relatedItem[mods:titleInfo]">
 		<xsl:for-each select="mods:titleInfo">
 			<tr>
@@ -1571,16 +1579,17 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
 		<xsl:variable name="accessUrl" select="substring-before(substring-after(., 'http'), substring(translate(substring-after(., 'http'), $urlchar, ''),1,1))"/>
 		<xsl:if test="normalize-space(.)">
-			<tr><td>
-				<xsl:choose>
-					<xsl:when test="not(@displayLabel)">
-						<xsl:value-of select="$accessCondition"/>
-					</xsl:when>
-				</xsl:choose>
-				<xsl:value-of select="@displayLabel"/>
-			</td>
+			<tr class="metaSetAccess">
 				<td>
-					<xsl:choose>	
+					<xsl:choose>
+						<xsl:when test="not(@displayLabel)">
+							<xsl:value-of select="$accessCondition"/>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:value-of select="@displayLabel"/>
+				</td>
+				<td>
+					<xsl:choose>
 						<xsl:when test="contains(., 'http')">
 							<xsl:value-of select="substring-before(., 'http')"/>
 							<xsl:element name="a">
@@ -1596,7 +1605,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 									</xsl:choose>
 								</xsl:attribute>
 								<xsl:text>http</xsl:text>
-								
+
 								<xsl:choose>
 									<xsl:when test="$accessUrl = ''">
 										<xsl:value-of select="substring-after(., 'http')"/>
@@ -1619,11 +1628,12 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 							<xsl:value-of select="."/>
 						</xsl:otherwise>
 					</xsl:choose>
-				</td></tr>
+				</td>
+			</tr>
 		</xsl:if>
 	</xsl:template>
 	<xsl:template match="mods:identifier[@displayLabel='Object File Name']">
-		<tr>
+		<tr class="metaSetCore">
 			<td>Object File Name</td>
 			<td><xsl:value-of select="."/></td>
 		</tr>
@@ -1631,7 +1641,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	
 	<xsl:template match="mods:extension">
 		<xsl:if test="normalize-space(mods:hardwareSoftware)">
-			<tr>
+			<tr class="metaSetAdmin">
 				<td>
 					<xsl:text>Digital Reproduction Information</xsl:text>
 				</td>
