@@ -1359,7 +1359,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>-->
 
 	<xsl:template match="mods:language[mods:languageTerm/@type='code']">
-		<tr class="metaSetContent">
+		<tr class="metaSetAccess">
 			<td>
 				<xsl:text>Language Code</xsl:text>
 			</td>
@@ -1396,11 +1396,19 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</tr>
 	</xsl:template>
 	
-	
-<!--	RETURN HERE FOR RELATED ITEM WORK 	-->
 	<xsl:template match="mods:relatedItem[mods:titleInfo]">
+	<xsl:variable name="metaSetName">
+		<xsl:choose>
+			<xsl:when test="@type='host'">
+				<xsl:value-of select="'metaSetCollection'"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="'metaSetAccess'"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 		<xsl:for-each select="mods:titleInfo">
-			<tr>
+			<tr class="{$metaSetName}">
 				<td>
 					<xsl:value-of select="@displayLabel"/>
 				</td>
@@ -1410,7 +1418,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</tr>
 		</xsl:for-each>
 		<xsl:for-each select="mods:location/mods:url[not(@displayLabel='Relation')]">
-			<tr>
+			<tr class="{$metaSetName}">
 				<td>
 					<xsl:value-of select="@displayLabel"/>
 				</td>
@@ -1425,7 +1433,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</tr>
 		</xsl:for-each>
 		<xsl:for-each select="mods:physicalDescription[mods:note]">
-			<tr>
+			<tr class="metaSetCarrier">
 				<td>
 					<xsl:choose>
 						<xsl:when test="mods:note/@type='medium'">
@@ -1442,7 +1450,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</tr>
 		</xsl:for-each>
 		<xsl:for-each select="mods:physicalDescription[mods:extent]">
-			<tr>
+			<tr class="metaSetCarrier">
 				<td>
 					<xsl:text>Extent</xsl:text>
 				</td>
@@ -1452,7 +1460,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</tr>
 		</xsl:for-each>
 		<xsl:for-each select="mods:part">
-			<tr>
+			<tr class="{$metaSetName}">
 				<td>
 					<xsl:text>Part of</xsl:text>
 				</td>
@@ -1467,7 +1475,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</tr>
 		</xsl:for-each>
 		<xsl:for-each select="mods:note[@type='content']">
-			<tr>
+			<tr class="{$metaSetName}">
 				<td>
 					<xsl:text>Host Content Note</xsl:text>
 				</td>
@@ -1477,7 +1485,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</tr>
 		</xsl:for-each>
 		<xsl:for-each select="mods:identifier">
-			<tr>
+			<tr class="{$metaSetName}">
 				<td>
 					<xsl:choose>
 						<xsl:when test="@displayLabel">
@@ -1494,7 +1502,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</tr>
 		</xsl:for-each>
 		<xsl:for-each select="mods:abstract">
-			<tr>
+			<tr class="metaSetContent">
 				<td>
 					<xsl:choose>
 						<xsl:when test="@displayLabel">
