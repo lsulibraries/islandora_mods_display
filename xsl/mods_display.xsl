@@ -800,7 +800,24 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:variable name="urlchar" select="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-#:%_+.~?&amp;/='"/>
 		<xsl:variable name="noteUrl" select="substring-before(substring-after(., 'http'), substring(translate(substring-after(., 'http'), $urlchar, ''),1,1))"/>
 		<xsl:if test="normalize-space(.)">
-			<tr class="metaSetContent"><td>
+			<xsl:variable name="metaSetName">
+				<xsl:choose>
+					<xsl:when test="@type = ('ownership' or 'preferred citation' or 'citation/reference')">
+						<xsl:value-of select="'metaSetAccess'"/>
+					</xsl:when>
+					<xsl:when test="@type = ('thesis' or 'statement of responsibility')">
+						<xsl:value-of select="'metaSetCore'"/>
+					</xsl:when>
+					<xsl:when test="@type='acquisition'">
+						<xsl:value-of select="'metaSetAdmin'"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="'metaSetContent'"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<tr class="{$metaSetName}">
+				<td>
 				<xsl:choose>
 					<xsl:when test="not(@displayLabel)">
 						<xsl:value-of select="$note"/>
