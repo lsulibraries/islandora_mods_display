@@ -320,7 +320,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					<xsl:value-of select="@displayLabel"/>
 				</xsl:if>
 			</td>
-			<td>
+			<td class="modsSubject">
 				<a>
 					<xsl:attribute name="href">
 						<xsl:for-each select="mods:topic">
@@ -372,7 +372,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					<xsl:value-of select="@displayLabel"/>
 				</xsl:if>
 			</td>
-			<td>
+			<td class="modsSubject">
 
 				<a>
 					<xsl:attribute name="href">
@@ -498,7 +498,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					<xsl:value-of select="@displayLabel"/>
 				</xsl:if>
 			</td>
-			<td>
+			<td class="modsSubject">
 				<a>
 					<xsl:attribute name="href">
 						<xsl:for-each select="mods:occupation">
@@ -564,7 +564,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</xsl:if>
 			</td>
 
-			<td>
+			<td class="modsSubject">
 				<xsl:for-each select="mods:name">
 					<xsl:for-each
 						select="/mods:mods/mods:subject/mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
