@@ -743,7 +743,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</xsl:choose>
 				<xsl:value-of select="@displayLabel"/>
 			</td>
-				<td>
+				<td class="modsDesc">
 					<xsl:choose>	
 						<xsl:when test="contains(., 'http')">
 							<xsl:value-of select="substring-before(., 'http')"/>
