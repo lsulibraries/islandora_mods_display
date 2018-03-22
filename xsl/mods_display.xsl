@@ -1335,6 +1335,24 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		  	</td>
 		</tr>
 	  </xsl:if>
+		<xsl:for-each select="mods:url[not(@displayLabel='Institution Web Site')]">
+			<tr class="metaSetAccess">
+				<td>
+					<xsl:choose>
+						<xsl:when test="@displayLabel"><xsl:value-of select="@displayLabel"/></xsl:when>
+						<xsl:otherwise><xsl:text>Resource URL</xsl:text></xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:element name="a">
+						<xsl:attribute name="href">
+							<xsl:value-of select="."/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</xsl:element>
+				</td>
+			</tr>
+		</xsl:for-each>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:electronicLocator)">
 	  	<tr class="metaSetAccess">
 			<td>
