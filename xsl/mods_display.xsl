@@ -35,6 +35,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:variable name="dateCaptured" select="'Date Captured'"/>
 	<xsl:variable name="dateOther" select="'Date Other'"/>
 	<xsl:variable name="publisher" select="'Publisher'"/>
+	<xsl:variable name="place" select="'Place of Origin'"/> 
 	<xsl:variable name="genre" select="'Genre'"/>
 	<xsl:variable name="typeOfResource" select="'Type of Resource'"/>
 	<xsl:variable name="extent" select="'Extent'"/>
@@ -910,7 +911,16 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:if>
 	<xsl:if test="mods:dateCaptured">
 		<tr class="metaSetAdmin">
-			<td><xsl:text>Date Digitized</xsl:text></td>
+			<td>
+				<xsl:choose>
+					<xsl:when test="@displayLabel">
+						<xsl:value-of select="@displayLabel"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$dateCaptured"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</td>
 			<td><xsl:value-of select="mods:dateCaptured"/>
 				<xsl:if test="mods:dateCaptured/@qualifier">
 					<xsl:text> (</xsl:text>
@@ -960,16 +970,23 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</td>
 		</tr>
 	</xsl:if>
-	<xsl:if test="mods:place">
+	<xsl:for-each select="mods:place">
 		<tr class="metaSetCore">
 			<td>
-				<xsl:text>Place of Origin</xsl:text>
+				<xsl:choose>
+					<xsl:when test="parent::mods:originInfo[@displayLabel]">
+						<xsl:value-of select="parent::mods:originInfo/@displayLabel"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$place"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</td>
 			<td>
-				<xsl:value-of select="mods:place/mods:placeTerm"/>
+				<xsl:value-of select="mods:placeTerm"/>
 			</td>
 		</tr>
-	</xsl:if>
+	</xsl:for-each>
 </xsl:template>	
 	<!--
 <xsl:template match="mods:originInfo">
@@ -1160,7 +1177,14 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:for-each select="mods:form[not(@type)]">
 				<tr class="metaSetCarrier">
 					<td>
-						<xsl:value-of select="$form"/>
+						<xsl:choose>
+							<xsl:when test="parent::mods:physicalDescription[@displayLabel]">
+								<xsl:value-of select="parent::mods:physicalDescription/@displayLabel"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$form"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</td>
 					<td>
 						<xsl:value-of select="normalize-space(.)"/>
