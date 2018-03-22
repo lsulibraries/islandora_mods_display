@@ -892,7 +892,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<tr class="metaSetCore">
 			<td><xsl:value-of select="$dateCreated"/></td>
 			<td><xsl:value-of select="mods:dateCreated"/>
-				<xsl:if test="mods:dateCreated/@qualifier">
+				<xsl:if test="mods:dateCreated/@qualifier != ''">
 					<xsl:text> (</xsl:text>
 					<xsl:value-of select="mods:dateCreated/@qualifier"/>
 					<xsl:text>)</xsl:text>
@@ -900,7 +900,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				<xsl:if test="mods:dateCreated[@point='end']">
 					<xsl:text> - </xsl:text>
 					<xsl:value-of select="mods:dateCreated[@point='end']"/>
-					<xsl:if test="mods:dateCreated/@qualifier">
+					<xsl:if test="mods:dateCreated/@qualifier != ''">
 						<xsl:text> (</xsl:text>
 						<xsl:value-of select="mods:dateCreated/@qualifier"/>
 						<xsl:text>)</xsl:text>
@@ -921,29 +921,30 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					</xsl:otherwise>
 				</xsl:choose>
 			</td>
-			<td><xsl:value-of select="mods:dateCaptured"/>
-				<xsl:if test="mods:dateCaptured/@qualifier">
-					<xsl:text> (</xsl:text>
-					<xsl:value-of select="mods:dateCaptured/@qualifier"/>
-					<xsl:text>)</xsl:text>
-				</xsl:if>
-				<xsl:if test="mods:dateCaptured[@point='end']">
-					<xsl:text> - </xsl:text>
-					<xsl:value-of select="mods:dateCaptured[@point='end']"/>
-					<xsl:if test="mods:dateCaptured/@qualifier">
+				<td>
+					<xsl:value-of select="mods:dateCaptured"/>
+					<xsl:if test="mods:dateCaptured/@qualifier != ''">
 						<xsl:text> (</xsl:text>
 						<xsl:value-of select="mods:dateCaptured/@qualifier"/>
 						<xsl:text>)</xsl:text>
 					</xsl:if>
-				</xsl:if>
-			</td>
+					<xsl:if test="mods:dateCaptured[@point = 'end']">
+						<xsl:text> - </xsl:text>
+						<xsl:value-of select="mods:dateCaptured[@point = 'end']"/>
+						<xsl:if test="mods:dateCaptured/@qualifier != ''">
+							<xsl:text> (</xsl:text>
+							<xsl:value-of select="mods:dateCaptured/@qualifier"/>
+							<xsl:text>)</xsl:text>
+						</xsl:if>
+					</xsl:if>
+				</td>
 		</tr>
 	</xsl:if>
 	<xsl:if test="mods:dateIssued">
 		<tr class="metaSetCore">
 			<td><xsl:text>Date Published</xsl:text></td>
 			<td><xsl:value-of select="mods:dateIssued"/>
-				<xsl:if test="mods:dateIssued/@qualifier">
+				<xsl:if test="mods:dateIssued/@qualifier != ''">
 					<xsl:text> (</xsl:text>
 					<xsl:value-of select="mods:dateIssued/@qualifier"/>
 					<xsl:text>)</xsl:text>
@@ -951,7 +952,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				<xsl:if test="mods:dateIssued[@point='end']">
 					<xsl:text> - </xsl:text>
 					<xsl:value-of select="mods:dateIssued[@point='end']"/>
-					<xsl:if test="mods:dateIssued/@qualifier">
+					<xsl:if test="mods:dateIssued/@qualifier != ''">
 						<xsl:text> (</xsl:text>
 						<xsl:value-of select="mods:dateIssued/@qualifier"/>
 						<xsl:text>)</xsl:text>
