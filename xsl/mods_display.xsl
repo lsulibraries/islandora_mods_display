@@ -1157,19 +1157,17 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</xsl:if>
 			</xsl:for-each>
 		
-		<xsl:if test="mods:form[not(@type)]">
-			<xsl:if test="normalize-space(mods:form[not(@type)])">
+		<xsl:for-each select="mods:form[not(@type)]">
 				<tr class="metaSetCarrier">
 					<td>
 						<xsl:value-of select="$form"/>
 					</td>
 					<td>
-						<xsl:value-of select="mods:form[not(@type)]"/>
+						<xsl:value-of select="normalize-space(.)"/>
 					</td>
 				</tr>
-			</xsl:if>
-		</xsl:if>
-
+			</xsl:for-each>
+		
 		<xsl:if test="mods:form[@type = 'material']">
 			<xsl:if test="normalize-space(mods:form[@type = 'material'])">
 				<tr class="metaSetCarrier">
@@ -1192,7 +1190,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 							<xsl:value-of select="@displayLabel"/>
 						</td>
 						<td>
-							<xsl:value-of select="."/>
+							<xsl:value-of select="normalize-space(.)"/>
 						</td>
 					</tr>
 				</xsl:when>
@@ -1206,7 +1204,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 									/>
 								</td>
 								<td>
-									<xsl:value-of select="."/>
+									<xsl:value-of select="normalize-space(.)"/>
 								</td>
 							</tr>
 						</xsl:when>
@@ -1278,16 +1276,23 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	        	</td>
 				<td>
 					<xsl:choose>
-						<xsl:when
-							test="parent::mods:location/mods:url[@displayLabel = 'Institution Web Site']">
-							<xsl:element name="a">
-								<xsl:attribute name="href">
-									<xsl:value-of
-										select="parent::mods:location/mods:url[@displayLabel = 'Institution Web Site']"
-									/>
-								</xsl:attribute>
-								<xsl:value-of select="."/>
-							</xsl:element>
+						<xsl:when test="@displayLabel = 'Physical Location'">
+							<xsl:choose>
+								<xsl:when
+									test="parent::mods:location/mods:url[@displayLabel = 'Institution Web Site']">
+									<xsl:element name="a">
+										<xsl:attribute name="href">
+											<xsl:value-of
+												select="parent::mods:location/mods:url[@displayLabel = 'Institution Web Site']"
+											/>
+										</xsl:attribute>
+										<xsl:value-of select="."/>
+									</xsl:element>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="."/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="."/>
