@@ -1504,7 +1504,14 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:for-each select="mods:part">
 			<tr class="{$metaSetName}">
 				<td>
-					<xsl:text>Part of</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@displayLabel">
+							<xsl:value-of select="@displayLabel"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Part of</xsl:text>		
+						</xsl:otherwise>
+					</xsl:choose>
 				</td>
 				<td>
 					<xsl:if test="mods:detail/mods:title">
@@ -1512,6 +1519,9 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					</xsl:if>
 					<xsl:if test="mods:detail/mods:number">
 						<xsl:value-of select="mods:detail/mods:number"/>
+					</xsl:if>
+					<xsl:if test="mods:extent">
+						<xsl:value-of select="mods:extent/*"/>
 					</xsl:if>
 				</td>
 			</tr>
