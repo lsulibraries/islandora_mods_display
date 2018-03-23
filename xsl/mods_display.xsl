@@ -38,7 +38,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:variable name="place" select="'Place of Origin'"/> 
 	<xsl:variable name="genre" select="'Genre'"/>
 	<xsl:variable name="typeOfResource" select="'Type of Resource'"/>
-	<xsl:variable name="extent" select="'Extent'"/>
+	<xsl:variable name="extent" select="'Size'"/>
 	<xsl:variable name="form" select="'Form'"/>
 	<xsl:variable name="mediaType" select="'Media Type'"/>
 	<xsl:variable name="mimeType" select="'Mime Type'"/>
@@ -1146,108 +1146,81 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>
 
 	<xsl:template match="mods:physicalDescription">
-		
-		<xsl:if test="mods:internetMediaType">
-			<xsl:if test="normalize-space(mods:internetMediaType)">
-				<tr class="metaSetCarrier">
-					<td>
-						<xsl:value-of select="$mediaType"/>
-					</td>
-					<td>
-						<xsl:value-of select="mods:internetMediaType"/>
-					</td>
-				</tr>
-			</xsl:if>
+		<xsl:apply-templates/>
+	</xsl:template>
+	
+	<xsl:template match="mods:extent">
+		<xsl:if test="normalize-space(.)">
+			<tr class="metaSetCarrier">
+				<td>
+					<xsl:value-of select="$extent"/>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
 		</xsl:if>
-		
-		
-			<xsl:for-each select="mods:extent">
-				<xsl:if test="normalize-space(.)">
-					<tr class="metaSetCarrier">
-						<td>
-							<xsl:text>Size</xsl:text>
-						</td>
-						<td>
-							<xsl:value-of select="."/>
-						</td>
-
-					</tr>
-				</xsl:if>
-			</xsl:for-each>
-		
-		<xsl:for-each select="mods:form[not(@type)]">
-				<tr class="metaSetCarrier">
-					<td>
-						<xsl:choose>
-							<xsl:when test="parent::mods:physicalDescription[@displayLabel]">
-								<xsl:value-of select="parent::mods:physicalDescription/@displayLabel"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$form"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</td>
-					<td>
-						<xsl:value-of select="normalize-space(.)"/>
-					</td>
-				</tr>
-			</xsl:for-each>
-		
-		<xsl:if test="mods:form[@type = 'material']">
-			<xsl:if test="normalize-space(mods:form[@type = 'material'])">
-				<tr class="metaSetCarrier">
-					<td>
-						<xsl:text>Materials</xsl:text>
-					</td>
-					<td>
-						<xsl:value-of select="mods:form[@type = 'material']"/>
-					</td>
-				</tr>
-			</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="mods:internetMediaType">
+		<xsl:if test="normalize-space(.)">
+			<tr class="metaSetCarrier">
+				<td>
+					<xsl:value-of select="$mediaType"/>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
 		</xsl:if>
-		
+	</xsl:template>
 
-		<xsl:for-each select="mods:note">
-			<xsl:choose>
-				<xsl:when test="@displayLabel">
-					<tr class="metaSetCarrier">
-						<td>
-							<xsl:value-of select="@displayLabel"/>
-						</td>
-						<td>
-							<xsl:value-of select="normalize-space(.)"/>
-						</td>
-					</tr>
-				</xsl:when>
-				<xsl:otherwise>
+	<xsl:template match="mods:form">
+		<xsl:if test="normalize-space(.)">
+			<tr class="metaSetCarrier">
+				<td>
 					<xsl:choose>
-						<xsl:when test="@type">
-							<tr class="metaSetCarrier">
-								<td>
-									<xsl:value-of
-										select="concat(translate(substring(@type, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@type, 2))"
-									/>
-								</td>
-								<td>
-									<xsl:value-of select="normalize-space(.)"/>
-								</td>
-							</tr>
+						<xsl:when test="parent::mods:physicalDescription[@displayLabel]">
+							<xsl:value-of select="parent::mods:physicalDescription/@displayLabel"/>
 						</xsl:when>
-					<xsl:otherwise>
-						<tr class="metaSetCarrier">
-							<td>
-								<xsl:text>Physical Description Note</xsl:text>
-							</td>
-							<td>
-								<xsl:value-of select="."/>
-							</td>
-						</tr>
-					</xsl:otherwise>
+						<xsl:when test="@type = 'material'">
+							<xsl:value-of select="'Material'"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$form"/>
+						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-
-		</xsl:for-each>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="mods:note[parent::mods:physicalDescription]">
+		<xsl:if test="normalize-space(.)">
+			<tr class="metaSetCarrier">
+				<td>
+					<xsl:choose>
+						<xsl:when test="@displayLabel">
+							<xsl:value-of select="@displayLabel"/>
+						</xsl:when>
+						<xsl:when test="@type">
+							<xsl:value-of
+								select="concat(translate(substring(@type, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@type, 2))"
+							/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Physical Description Note</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="mods:mimeType">
