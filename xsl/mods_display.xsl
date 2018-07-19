@@ -32,7 +32,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:variable name="note" select="'Note'"/>
 	<xsl:variable name="dateIssued" select="'Date Issued'"/>
 	<xsl:variable name="dateCreated" select="'Date Created'"/>
-	<xsl:variable name="dateCaptured" select="'Date Captured'"/>
+	<xsl:variable name="dateCaptured" select="'Date Digitized'"/>
 	<xsl:variable name="dateOther" select="'Date Other'"/>
 	<xsl:variable name="publisher" select="'Publisher'"/>
 	<xsl:variable name="place" select="'Place of Origin'"/> 
