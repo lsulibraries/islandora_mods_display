@@ -1400,32 +1400,35 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	  </dc:identifier>
 	</xsl:template>-->
 
-	<xsl:template match="mods:language[mods:languageTerm/@type='code']">
+	<xsl:template match="mods:language">
 		<tr class="metaSetAccess">
-			<td>
-				<xsl:text>Language Code</xsl:text>
-			</td>
-			<td>
-				<xsl:for-each select="mods:languageTerm[@type = 'code']">
-					<xsl:value-of select="."/>
-					<xsl:if test="position() != last()">, </xsl:if>
-				</xsl:for-each>
-			</td>
+			<xsl:choose>
+			<xsl:when test="mods:languageTerm/@type='text'">
+				<td>
+					<xsl:text>Language</xsl:text>
+				</td>
+				<td>
+					<xsl:for-each select="mods:languageTerm[@type='text']">
+						<xsl:value-of select="."/>
+						<xsl:if test="position()!=last()">, </xsl:if>
+					</xsl:for-each>
+				</td>
+			</xsl:when>
+				<xsl:otherwise>
+					<td>
+						<xsl:text>Language Code</xsl:text>
+					</td>
+					<td>
+						<xsl:for-each select="mods:languageTerm[@type='code']">
+							<xsl:value-of select="."/>
+							<xsl:if test="position()!=last()">, </xsl:if>
+						</xsl:for-each>
+					</td>
+				</xsl:otherwise>
+		</xsl:choose>
 		</tr>
 	</xsl:template>
-	<xsl:template match="mods:language[mods:languageTerm/@type='term']">
-		<tr class="metaSetAccess">
-			<td>
-				<xsl:text>Language</xsl:text>
-			</td>
-			<td>
-				<xsl:for-each select="mods:languageTerm[@type='term']">
-					<xsl:value-of select="."/>
-					<xsl:if test="position()!=last()">, </xsl:if>
-				</xsl:for-each>
-			</td>
-		</tr>
-	</xsl:template>
+
 <!-- <start will's own loop>-->
 	<xsl:template match="mods:identifier[not(@displayLabel='Migrated From')]">
 		<tr class="metaSetCore">
