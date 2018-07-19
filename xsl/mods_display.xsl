@@ -213,8 +213,8 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="mods:name[1][not(parent::subject)]">
-		<xsl:for-each select="/mods:mods/mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
+	<xsl:template match="mods:name[1][not(parent::mods:subject)]">
+		<xsl:for-each select="/mods:mods/mods:name[not(mods:role/mods:roleTerm/text()='Facsimilist')][count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
 		<xsl:variable name="nameType" select="@type"/>
 		<tr class="metaSetCore">
 			<td>
