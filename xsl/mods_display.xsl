@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="mods dc xsi oai_dc srw_dc"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:srw_dc="info:srw/schema/1/dc-schema"
 	xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"	
@@ -1276,6 +1277,14 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					<xsl:choose>
 						<xsl:when test="@displayLabel = 'Physical Location'">
 							<xsl:choose>
+								<xsl:when test="@xlink:href">
+									<xsl:element name="a">
+										<xsl:attribute name="href">
+											<xsl:value-of select="@xlink:href"/>
+										</xsl:attribute>
+										<xsl:value-of select="."/>
+									</xsl:element>
+								</xsl:when>
 								<xsl:when
 									test="parent::mods:location/mods:url[@displayLabel = 'Institution Web Site']">
 									<xsl:element name="a">
@@ -1291,6 +1300,12 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 									<xsl:value-of select="."/>
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="normalize-space(parent::mods:location/mods:holdingSimple/mods:copyInformation/mods:subLocation)">
+								<xsl:for-each select="parent::mods:location/mods:holdingSimple/mods:copyInformation/mods:subLocation">
+									<br />
+									<xsl:value-of select="."/>
+									</xsl:for-each>
+							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="."/>
@@ -1303,7 +1318,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	  <xsl:if test="normalize-space(mods:shelfLocator)">
 	  	<tr class="metaSetAccess">
 	  		<td>
-	  			<xsl:text>Shelf Locator</xsl:text>
+	  			<xsl:value-of select="$shelfLocation"/>
 	  		</td>
 	  		<td>
 	      		<xsl:for-each select="mods:shelfLocator">
@@ -1331,22 +1346,10 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	    	</td>
 	  	</tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:subLocation)">
-	  	<tr class="metaSetAccess">
-			<td>
-				<xsl:text>Sublocation</xsl:text>
-			</td>
-			<td>
-		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:subLocation">
-		    		<xsl:value-of select="."/>
-		  		</xsl:for-each>
-		  	</td>
-		</tr>
-	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:shelfLocator)">
 	  	<tr class="metaSetAccess">
 			<td>
-				<xsl:text>Shelf Locator</xsl:text>
+				<xsl:value-of select="$shelfLocation"/>
 			</td>
 			<td>
 		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:shelfLocator">
@@ -1670,6 +1673,14 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</td>
 				<td>
 					<xsl:choose>
+						<xsl:when test="@xlink:href">
+							<xsl:element name="a">
+								<xsl:attribute name="href">
+									<xsl:value-of select="@xlink:href"/>
+								</xsl:attribute>
+								<xsl:value-of select="."/>
+							</xsl:element>
+						</xsl:when>
 						<xsl:when test="contains(., 'http')">
 							<xsl:value-of select="substring-before(., 'http')"/>
 							<xsl:element name="a">
