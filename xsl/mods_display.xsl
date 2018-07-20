@@ -1455,7 +1455,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-		<xsl:for-each select="mods:titleInfo">
+		<xsl:for-each select="mods:titleInfo[not(@displayLabel='Parent Item Title')]">
 			<tr class="{$metaSetName}">
 				<td>
 					<xsl:value-of select="@displayLabel"/>
