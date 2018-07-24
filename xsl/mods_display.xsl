@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="mods dc xsi oai_dc srw_dc"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:srw_dc="info:srw/schema/1/dc-schema"
 	xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"	
@@ -32,13 +33,13 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:variable name="note" select="'Note'"/>
 	<xsl:variable name="dateIssued" select="'Date Issued'"/>
 	<xsl:variable name="dateCreated" select="'Date Created'"/>
-	<xsl:variable name="dateCaptured" select="'Date Captured'"/>
+	<xsl:variable name="dateCaptured" select="'Date Digitized'"/>
 	<xsl:variable name="dateOther" select="'Date Other'"/>
 	<xsl:variable name="publisher" select="'Publisher'"/>
 	<xsl:variable name="place" select="'Place of Origin'"/> 
 	<xsl:variable name="genre" select="'Genre'"/>
 	<xsl:variable name="typeOfResource" select="'Type of Resource'"/>
-	<xsl:variable name="extent" select="'Extent'"/>
+	<xsl:variable name="extent" select="'Size'"/>
 	<xsl:variable name="form" select="'Form'"/>
 	<xsl:variable name="mediaType" select="'Media Type'"/>
 	<xsl:variable name="mimeType" select="'Mime Type'"/>
@@ -213,8 +214,8 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="mods:name[1][not(parent::subject)]">
-		<xsl:for-each select="/mods:mods/mods:name[count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
+	<xsl:template match="mods:name[1][not(parent::mods:subject)]">
+		<xsl:for-each select="/mods:mods/mods:name[not(mods:role/mods:roleTerm/text()='Facsimilist')][count(. | key('namesByDisplayLabel', @displayLabel)[1]) = 1]">
 		<xsl:variable name="nameType" select="@type"/>
 		<tr class="metaSetCore">
 			<td>
@@ -1146,108 +1147,81 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	</xsl:template>
 
 	<xsl:template match="mods:physicalDescription">
-		
-		<xsl:if test="mods:internetMediaType">
-			<xsl:if test="normalize-space(mods:internetMediaType)">
-				<tr class="metaSetCarrier">
-					<td>
-						<xsl:value-of select="$mediaType"/>
-					</td>
-					<td>
-						<xsl:value-of select="mods:internetMediaType"/>
-					</td>
-				</tr>
-			</xsl:if>
+		<xsl:apply-templates/>
+	</xsl:template>
+	
+	<xsl:template match="mods:extent">
+		<xsl:if test="normalize-space(.)">
+			<tr class="metaSetCarrier">
+				<td>
+					<xsl:value-of select="$extent"/>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
 		</xsl:if>
-		
-		
-			<xsl:for-each select="mods:extent">
-				<xsl:if test="normalize-space(.)">
-					<tr class="metaSetCarrier">
-						<td>
-							<xsl:text>Size</xsl:text>
-						</td>
-						<td>
-							<xsl:value-of select="."/>
-						</td>
-
-					</tr>
-				</xsl:if>
-			</xsl:for-each>
-		
-		<xsl:for-each select="mods:form[not(@type)]">
-				<tr class="metaSetCarrier">
-					<td>
-						<xsl:choose>
-							<xsl:when test="parent::mods:physicalDescription[@displayLabel]">
-								<xsl:value-of select="parent::mods:physicalDescription/@displayLabel"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$form"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</td>
-					<td>
-						<xsl:value-of select="normalize-space(.)"/>
-					</td>
-				</tr>
-			</xsl:for-each>
-		
-		<xsl:if test="mods:form[@type = 'material']">
-			<xsl:if test="normalize-space(mods:form[@type = 'material'])">
-				<tr class="metaSetCarrier">
-					<td>
-						<xsl:text>Materials</xsl:text>
-					</td>
-					<td>
-						<xsl:value-of select="mods:form[@type = 'material']"/>
-					</td>
-				</tr>
-			</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="mods:internetMediaType">
+		<xsl:if test="normalize-space(.)">
+			<tr class="metaSetCarrier">
+				<td>
+					<xsl:value-of select="$mediaType"/>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
 		</xsl:if>
-		
+	</xsl:template>
 
-		<xsl:for-each select="mods:note">
-			<xsl:choose>
-				<xsl:when test="@displayLabel">
-					<tr class="metaSetCarrier">
-						<td>
-							<xsl:value-of select="@displayLabel"/>
-						</td>
-						<td>
-							<xsl:value-of select="normalize-space(.)"/>
-						</td>
-					</tr>
-				</xsl:when>
-				<xsl:otherwise>
+	<xsl:template match="mods:form">
+		<xsl:if test="normalize-space(.)">
+			<tr class="metaSetCarrier">
+				<td>
 					<xsl:choose>
-						<xsl:when test="@type">
-							<tr class="metaSetCarrier">
-								<td>
-									<xsl:value-of
-										select="concat(translate(substring(@type, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@type, 2))"
-									/>
-								</td>
-								<td>
-									<xsl:value-of select="normalize-space(.)"/>
-								</td>
-							</tr>
+						<xsl:when test="parent::mods:physicalDescription[@displayLabel]">
+							<xsl:value-of select="parent::mods:physicalDescription/@displayLabel"/>
 						</xsl:when>
-					<xsl:otherwise>
-						<tr class="metaSetCarrier">
-							<td>
-								<xsl:text>Physical Description Note</xsl:text>
-							</td>
-							<td>
-								<xsl:value-of select="."/>
-							</td>
-						</tr>
-					</xsl:otherwise>
+						<xsl:when test="@type = 'material'">
+							<xsl:value-of select="'Material'"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$form"/>
+						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-
-		</xsl:for-each>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="mods:note[parent::mods:physicalDescription]">
+		<xsl:if test="normalize-space(.)">
+			<tr class="metaSetCarrier">
+				<td>
+					<xsl:choose>
+						<xsl:when test="@displayLabel">
+							<xsl:value-of select="@displayLabel"/>
+						</xsl:when>
+						<xsl:when test="@type">
+							<xsl:value-of
+								select="concat(translate(substring(@type, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@type, 2))"
+							/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Physical Description Note</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:value-of select="."/>
+				</td>
+			</tr>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="mods:mimeType">
@@ -1303,6 +1277,14 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					<xsl:choose>
 						<xsl:when test="@displayLabel = 'Physical Location'">
 							<xsl:choose>
+								<xsl:when test="@xlink:href">
+									<xsl:element name="a">
+										<xsl:attribute name="href">
+											<xsl:value-of select="@xlink:href"/>
+										</xsl:attribute>
+										<xsl:value-of select="."/>
+									</xsl:element>
+								</xsl:when>
 								<xsl:when
 									test="parent::mods:location/mods:url[@displayLabel = 'Institution Web Site']">
 									<xsl:element name="a">
@@ -1318,6 +1300,12 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 									<xsl:value-of select="."/>
 								</xsl:otherwise>
 							</xsl:choose>
+							<xsl:if test="normalize-space(parent::mods:location/mods:holdingSimple/mods:copyInformation/mods:subLocation)">
+								<xsl:for-each select="parent::mods:location/mods:holdingSimple/mods:copyInformation/mods:subLocation">
+									<br />
+									<xsl:value-of select="."/>
+									</xsl:for-each>
+							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="."/>
@@ -1330,7 +1318,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	  <xsl:if test="normalize-space(mods:shelfLocator)">
 	  	<tr class="metaSetAccess">
 	  		<td>
-	  			<xsl:text>Shelf Locator</xsl:text>
+	  			<xsl:value-of select="$shelfLocation"/>
 	  		</td>
 	  		<td>
 	      		<xsl:for-each select="mods:shelfLocator">
@@ -1358,22 +1346,10 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	    	</td>
 	  	</tr>
 	  </xsl:if>
-	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:subLocation)">
-	  	<tr class="metaSetAccess">
-			<td>
-				<xsl:text>Sublocation</xsl:text>
-			</td>
-			<td>
-		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:subLocation">
-		    		<xsl:value-of select="."/>
-		  		</xsl:for-each>
-		  	</td>
-		</tr>
-	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:shelfLocator)">
 	  	<tr class="metaSetAccess">
 			<td>
-				<xsl:text>Shelf Locator</xsl:text>
+				<xsl:value-of select="$shelfLocation"/>
 			</td>
 			<td>
 		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:shelfLocator">
@@ -1427,32 +1403,35 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	  </dc:identifier>
 	</xsl:template>-->
 
-	<xsl:template match="mods:language[mods:languageTerm/@type='code']">
+	<xsl:template match="mods:language">
 		<tr class="metaSetAccess">
-			<td>
-				<xsl:text>Language Code</xsl:text>
-			</td>
-			<td>
-				<xsl:for-each select="mods:languageTerm[@type = 'code']">
-					<xsl:value-of select="."/>
-					<xsl:if test="position() != last()">, </xsl:if>
-				</xsl:for-each>
-			</td>
+			<xsl:choose>
+			<xsl:when test="mods:languageTerm/@type='text'">
+				<td>
+					<xsl:text>Language</xsl:text>
+				</td>
+				<td>
+					<xsl:for-each select="mods:languageTerm[@type='text']">
+						<xsl:value-of select="."/>
+						<xsl:if test="position()!=last()">, </xsl:if>
+					</xsl:for-each>
+				</td>
+			</xsl:when>
+				<xsl:otherwise>
+					<td>
+						<xsl:text>Language Code</xsl:text>
+					</td>
+					<td>
+						<xsl:for-each select="mods:languageTerm[@type='code']">
+							<xsl:value-of select="."/>
+							<xsl:if test="position()!=last()">, </xsl:if>
+						</xsl:for-each>
+					</td>
+				</xsl:otherwise>
+		</xsl:choose>
 		</tr>
 	</xsl:template>
-	<xsl:template match="mods:language[mods:languageTerm/@type='term']">
-		<tr class="metaSetAccess">
-			<td>
-				<xsl:text>Language</xsl:text>
-			</td>
-			<td>
-				<xsl:for-each select="mods:languageTerm[@type='term']">
-					<xsl:value-of select="."/>
-					<xsl:if test="position()!=last()">, </xsl:if>
-				</xsl:for-each>
-			</td>
-		</tr>
-	</xsl:template>
+
 <!-- <start will's own loop>-->
 	<xsl:template match="mods:identifier[not(@displayLabel='Migrated From')]">
 		<tr class="metaSetCore">
@@ -1476,7 +1455,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-		<xsl:for-each select="mods:titleInfo">
+		<xsl:for-each select="mods:titleInfo[not(@displayLabel='Parent Item Title')]">
 			<tr class="{$metaSetName}">
 				<td>
 					<xsl:value-of select="@displayLabel"/>
@@ -1531,7 +1510,14 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 		<xsl:for-each select="mods:part">
 			<tr class="{$metaSetName}">
 				<td>
-					<xsl:text>Part of</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@displayLabel">
+							<xsl:value-of select="@displayLabel"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Part of</xsl:text>		
+						</xsl:otherwise>
+					</xsl:choose>
 				</td>
 				<td>
 					<xsl:if test="mods:detail/mods:title">
@@ -1539,6 +1525,9 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 					</xsl:if>
 					<xsl:if test="mods:detail/mods:number">
 						<xsl:value-of select="mods:detail/mods:number"/>
+					</xsl:if>
+					<xsl:if test="mods:extent">
+						<xsl:value-of select="mods:extent/*"/>
 					</xsl:if>
 				</td>
 			</tr>
@@ -1684,6 +1673,14 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 				</td>
 				<td>
 					<xsl:choose>
+						<xsl:when test="@xlink:href">
+							<xsl:element name="a">
+								<xsl:attribute name="href">
+									<xsl:value-of select="@xlink:href"/>
+								</xsl:attribute>
+								<xsl:value-of select="."/>
+							</xsl:element>
+						</xsl:when>
 						<xsl:when test="contains(., 'http')">
 							<xsl:value-of select="substring-before(., 'http')"/>
 							<xsl:element name="a">
