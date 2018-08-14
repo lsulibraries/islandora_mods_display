@@ -116,7 +116,8 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 							</th>
 						</tr>
 						<xsl:apply-templates select="mods:titleInfo[not(@type)]"/>
-						<xsl:apply-templates select="*[not(self::mods:titleInfo[not(@type)])]"/>
+						<xsl:apply-templates select="mods:titleInfo[@type]"/>
+						<xsl:apply-templates select="*[not(self::mods:titleInfo)]"/>
 					</table>
 <!--			</oai_dc:dc> -->
 			</xsl:for-each>
