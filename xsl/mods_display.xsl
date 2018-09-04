@@ -692,7 +692,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
     <xsl:if test="normalize-space(mods:cartographics)">
       <xsl:for-each select="mods:cartographics/*">
         <div class="metadataRow metaSetContent">
-          <div class="metadataTitle">
+          <div class="metadataLabel">
             <xsl:value-of select="$subjectCartographic" />
           </div>
           <div class="metadataValue">
@@ -704,7 +704,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
     <xsl:if test="normalize-space(mods:temporal)">
       <xsl:if test="mods:temporal">
         <div class="metadataRow metaSetContent">
-          <div class="metadataTitle">
+          <div class="metadataLabel">
             <xsl:value-of select="$subjectTemporal" />
           </div>
           <div class="metadataValue">
@@ -718,7 +718,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
     </xsl:if>
     <xsl:if test="*[1][local-name()='topic'] and *[local-name()!='topic']">
       <div class="metadataRow metaSetContent">
-        <div class="metadataTitle">
+        <div class="metadataLabel">
           <xsl:value-of select="$subjectLocalname" />
         </div>
         <div class="metadataValue">
@@ -1565,7 +1565,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
     </xsl:for-each>
     <xsl:for-each select="mods:identifier">
       <div class="metadataRow {$metaSetName}">
-        <div class="metadataTitle">
+        <div class="metadataLabel">
           <xsl:choose>
             <xsl:when test="@displayLabel">
               <xsl:value-of select="@displayLabel" />
@@ -1756,7 +1756,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
   <xsl:template match="mods:extension">
     <xsl:if test="normalize-space(mods:hardwareSoftware)">
       <div class="metadataRow metaSetAdmin">
-        <div class="metadataTitle">
+        <div class="metadataLabel">
           <xsl:text>Digital Reproduction Information</xsl:text>
         </div>
         <div class="metadataValue">
