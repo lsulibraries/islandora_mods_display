@@ -1345,10 +1345,10 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	  </xsl:if>
 	  <xsl:if test="normalize-space(mods:holdingSimple/mods:copyInformation/mods:shelfLocator)">
 	  	<div class="metadataRow metaSetAccess">
-			<div class="metadataValue">
+			<div class="metadataTitle">
 				<xsl:value-of select="$shelfLocation"/>
 			</div>
-			<div>
+			<div class="metadataValue">
 		  		<xsl:for-each select="mods:holdingSimple/mods:copyInformation/mods:shelfLocator">
 		    		<xsl:value-of select="."/>
 		  		</xsl:for-each>
@@ -1723,7 +1723,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
 	<xsl:template match="mods:identifier[@displayLabel='Object File Name']">
 		<div class="metadataRow metaSetCore">
 			<div class="metadataLabel">Object File Name</div>
-			<div><xsl:value-of select="."/></div>
+			<div class="metadataValue"><xsl:value-of select="."/></div>
 		</div>
 	</xsl:template>
 
