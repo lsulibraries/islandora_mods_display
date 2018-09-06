@@ -6,8 +6,7 @@
 This stylesheet transforms MODS into HTML for public facing display of MODS metadata in Islandora.
 Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04 Tracy Meehleib <tmee@loc.gov>)
 -->
-
-  <xsl:output method="xml" indent="yes" />
+  <xsl:output method="html" indent="yes"/>
   <xsl:strip-space elements="*" />
   <xsl:key name="namesByDisplayLabel" match="mods:name" use="@displayLabel" />
   <xsl:variable name="title" select="'Title'" />
