@@ -371,7 +371,7 @@ Originally derived from a MODS to DC converter. (credit: Version 1.0, 2007-05-04
           <xsl:value-of select="@displayLabel" />
         </xsl:if>
       </div>
-      <div class="modsSubject">
+      <div class="metadataValue modsSubject">
 
         <a>
           <xsl:attribute name="href">
